@@ -5,11 +5,11 @@ function Addcourse(){
     const [Title , setTitle] = useState("")
     const [Description , setDescription] = useState("")
     const [ImageLink , setLink] = useState("")
-    const [price , setPrice] = useState("")
+    const [price , setPrice] = useState(0)
     
     return <div style={{
         display:'flex',
-        justifyContent:'center'
+        justifyContent:'center',
     }}>
     <Card variant="outlined" style={{width :400 , padding:20}}> 
         <TextField
@@ -62,6 +62,7 @@ function Addcourse(){
             }).then((res)=>{
                 return res.json();
             }).then((data)=>{
+                alert('course added !')
                 console.log(data)
             })
         }}>Add course</Button>

@@ -1,10 +1,12 @@
 import { Card, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import { useState } from 'react';
 
 function Signin(){
+     const [Email , setEmail] = useState("")
+    const [Password , setPassword] = useState("")
     return <div>
-       
             <div style={{
                 paddingTop :150 ,
                  marginBottom:10,
@@ -12,7 +14,7 @@ function Signin(){
                  justifyContent:'center'
                  }}>
                     <Typography variant='h6'>
-                Welcom Back, Sign in Below
+                    Welcom Back, Sign in Below
                 </Typography>
             </div>
        
@@ -22,11 +24,45 @@ function Signin(){
         }}>
         <Card variant="outlined" style={{width :400 , padding:20}}> 
         
-            <TextField id="outlined-basic" label="Username" variant="outlined" fullWidth />
+            <TextField onChange={
+                (e)=>{
+                    setEmail(e.target.value)
+                    }
+                }
+                    label="Email"
+                    type='text'
+                    variant="outlined"
+                    fullWidth />
             <br/><br/>   
-            <TextField id="outlined-basic" label="Password" variant="outlined" type="password" fullWidth />
+            <TextField onChange={
+                    (e)=>{
+                        setPassword(e.target.value)
+                    }
+                }
+                label="Password"
+                variant="outlined"
+                type="password"
+                fullWidth />
             <br/><br/>
-            <Button  size= "large"variant="contained">Signin</Button>
+            <Button  size= "large"variant="contained"
+            onClick={()=>{
+            fetch('http://localhost:3000/admin/login',{
+                method :"POST",
+                body:JSON.stringify({
+                    username:Email,
+                    password:Password
+                }),
+                headers:{
+                    "Content-type":"application/json"
+                }
+            }).then((res)=>{
+                return res.json();
+            }).then((data)=>{
+                console.log(data)
+                localStorage.setItem("token", data.token)
+                window.location = '/'
+            })
+            }}>Sign In</Button>
             </Card>
         </div>
     </div>

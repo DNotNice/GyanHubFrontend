@@ -58,7 +58,7 @@ function Signup(){
                 return res.json();
             }).then((data)=>{
                 localStorage.setItem("token", data.token)
-                console.log(data.token)
+                window.location = '/'
             })
             }}>Sign Up</Button>
             </Card>
