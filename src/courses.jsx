@@ -22,7 +22,7 @@ function Courses(){
 
     return <div style={{display:'flex' ,flexWrap:'wrap' , justifyContent:'center'}}>
         
-        {courses.map(course =>  { 
+        {courses.map((course) =>  { 
             return <Course course={course} />}
         )}
     </div>
@@ -33,7 +33,7 @@ function Courses(){
         margin:10,
         width:300,
         padding:20,
-        minHeight:300
+        minHeight:200
     }}>
         <Typography  textAlign= "center" variant="h5">{course.courseTitle}</Typography>
         <Typography  textAlign= "center" variant="subtitle1">{course.courseDesc}</Typography>
