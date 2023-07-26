@@ -2,10 +2,15 @@ import { Card, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { userState } from '../store/atoms/user';
 
-function Signin(){
-     const [Email , setEmail] = useState("")
+function Signup({}){
+    const [Email , setEmail] = useState("")
     const [Password , setPassword] = useState("")
+    const navigate = useNavigate()
+    const setUser = useSetRecoilState(userState)
     return <div>
             <div style={{
                 paddingTop :150 ,
@@ -14,7 +19,7 @@ function Signin(){
                  justifyContent:'center'
                  }}>
                     <Typography variant='h6'>
-                    Welcom Back, Sign in Below
+                Welcom to GyanHub, Sign up Below
                 </Typography>
             </div>
        
@@ -30,7 +35,6 @@ function Signin(){
                     }
                 }
                     label="Email"
-                    type='text'
                     variant="outlined"
                     fullWidth />
             <br/><br/>   
@@ -46,10 +50,10 @@ function Signin(){
             <br/><br/>
             <Button  size= "large"variant="contained"
             onClick={()=>{
-            fetch('http://localhost:3000/admin/login',{
+            fetch('http://localhost:3000/admin/signup',{
                 method :"POST",
                 body:JSON.stringify({
-                    username:Email,
+                    username:Email ,
                     password:Password
                 }),
                 headers:{
@@ -58,13 +62,15 @@ function Signin(){
             }).then((res)=>{
                 return res.json();
             }).then((data)=>{
-                console.log(data)
                 localStorage.setItem("token", data.token)
-                window.location = '/'
+                setUser({
+                    userEmail: Email , isLoading :false
+                })
+                navigate('/')
             })
-            }}>Sign In</Button>
+            }}>Sign Up</Button>
             </Card>
         </div>
     </div>
 }
-export default Signin
+export default Signup

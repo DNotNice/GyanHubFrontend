@@ -1,9 +1,13 @@
-import { Button, Container, ThemeProvider, Typography, createTheme } from "@mui/material"
-import { useEffect, useState } from "react"
+import { Button, CircularProgress, ThemeProvider, Typography, createTheme } from "@mui/material"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import TextField from "@mui/material/TextField";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { isUserLoading } from "../store/selectors/isUserLoading";
+import { userState } from "../store/atoms/user";
+import {userEmailState} from '../store/selectors/userEmail'
 const SearchBar = ({setSearchQuery}) => (
     <div >
       <TextField
@@ -32,6 +36,10 @@ const SearchBar = ({setSearchQuery}) => (
   
 function Appbar(){
     const [searchQuery, setSearchQuery] = useState("");
+    const navigate = useNavigate()
+    const userLoading = useRecoilValue(isUserLoading)
+    const userEmail = useRecoilValue(userEmailState)
+    const setUser = useSetRecoilState(userState)
     const theme = createTheme({
         typography: {
           poster: {
@@ -50,31 +58,18 @@ function Appbar(){
           },
         },
       });
-    const navigate = useNavigate()
-    const [userEmail , setuserEmail] = useState(null)
-    useEffect(()=>{
-        fetch('http://localhost:3000/admin/me',{
-            method:"GET",
-            headers:{   
-                "Content-type":"application/json",
-                "Authorization":"Bearer "+localStorage.getItem("token")
-            }
-    }).then(
-        (res)=>{ return res.json()}
-        ).then((data)=>{
-            if(data.username)setuserEmail(data.username)
-            console.log(data)
-        })
-    },[])
+    if(userLoading)console.log('loadin')
     if(userEmail){
         return <div style={{
             display: "flex",
             justifyContent: "space-between",
             padding: 4,
             zIndex: 1,
-            background:"#28282B"
+            background:"#eeeeee"
         }}>
-            <div style={{marginLeft: 10}}>
+            <div style={{marginLeft: 10 ,cursor:'pointer'}} onClick={()=>{
+              navigate('/')
+            }}>
                 <ThemeProvider theme={theme}>
                 <Typography variant={"poster"}>GyanHub</Typography>
                 </ThemeProvider>
@@ -102,7 +97,11 @@ function Appbar(){
                         variant={"contained"}
                         onClick={() => {
                             localStorage.setItem("token", null);
-                            window.location = "/";
+                            setUser({
+                              isLoading : true,
+                              userEmail:null
+                            })
+                            navigate('/')
                         }}
                     >Logout</Button>
                 </div>
@@ -117,12 +116,13 @@ function Appbar(){
         zIndex: 1,
         background:"#eeeeee"
     }}>
-        <div style={{marginLeft: 10 ,display:'flex'}}>
-               <ThemeProvider theme={theme}>
+        <div style={{marginLeft: 10 ,cursor:'pointer'}} onClick={()=>{
+              navigate('/')
+            }}>
+                <ThemeProvider theme={theme}>
                 <Typography variant={"poster"}>GyanHub</Typography>
                 </ThemeProvider>
-                
-        </div>
+            </div>
         <div
       style={{
         display: "flex",
